@@ -108,36 +108,14 @@ module Gitrob
         end
       end
 
-
       def download_blob(blob)
-        # construct url to retrieve file for loop
-        # file_url = repo.url + blob.path
-        # tree:        GET /repos/:owner/:repo/git/trees/:sha?recursive=1
-        #download file GET /repos/:owner/:repo/contents/:path
-
-        github_client2 do |client|
-          # "repos/#{repository[:full_name]}/contents/#{blob[:path]}" )
-          # https://developer.github.com/v3/repos/contents/#get-contents
-          #content = File.read('Input.txt')
-
-
-          bo = client.get_request(blob.url)["content"]
-          decode_base64_content = Base64.decode64(bo)
-
-          # TODO: Decode handling
-          # TODO: Consider directories to be ignored
-
+        # TODO handle other encodings than B64 - is there any?
+        # important: content MUST be decoded, otherwise creds cannot be found
+        # howto: https://developer.github.com/v3/repos/contents/#get-contents
+        github_client do |client|
+          b64blob = client.get_request(blob.url)["content"]
+          Base64.decode64(b64blob)
         end
-      end
-
-      def github_client2
-        client = @client_manager.sample
-        yield client
-      rescue ::Github::Error::Forbidden => e
-        raise e unless e.message.include?("API rate limit exceeded")
-        @client_manager.remove(client)
-      rescue ::Github::Error::Unauthorized
-        @client_manager.remove(client)
       end
 
       def get_blobs(repository)

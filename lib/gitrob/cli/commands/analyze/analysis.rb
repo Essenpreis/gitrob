@@ -27,9 +27,8 @@ module Gitrob
 
               #TODO: check signatures if there's a deep inspection signature - download blob only then
               #info("Loaded #{Gitrob::BlobObserver.signatures.count} signatures")
-
-              s = download_blob(blob)
-              Gitrob::BlobObserver.deep_observe(db_blob, s)
+              blob_string = download_blob(blob)
+              Gitrob::BlobObserver.deep_observe(db_blob, blob_string)
 
               #Gitrob::BlobObserver.observe(db_blob)
 

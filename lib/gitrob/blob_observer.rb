@@ -107,7 +107,7 @@ module Gitrob
       REQUIRED_SIGNATURE_KEYS.each do |key|
         unless signature.key?(key)
           fail CorruptSignaturesError,
-               "Missing required signature key: #{key}" #TODO: part is not necessary for content sigs
+               "Missing required signature key: #{key}"
         end
       end
     end
@@ -149,6 +149,7 @@ module Gitrob
 
     def self.observe_with_content_regex_signature(blob, signature, blob_string)
       regex = Regexp.new(signature.pattern, Regexp::IGNORECASE)
+      #TODO: check for GITROBIGNORE tag in order to ignore finding
       blob_string.each_line do |haystack|
         next if regex.match(haystack).nil?
         blob.add_flag(

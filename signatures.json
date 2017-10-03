@@ -1,4 +1,14 @@
 [
+
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "password",
+    "caption": "Contains password",
+    "description": null
+  },
+
+
   {
     "part": "filename",
     "type": "regex",

@@ -24,7 +24,15 @@ module Gitrob
             findings = 0
             blobs.each do |blob|
               db_blob = @db_assessment.save_blob(blob, db_repo, db_owner)
-              Gitrob::BlobObserver.observe(db_blob)
+
+              #TODO: check signatures if there's a deep inspection signature - download blob only then
+              #info("Loaded #{Gitrob::BlobObserver.signatures.count} signatures")
+
+              s = download_blob(blob)
+              Gitrob::BlobObserver.deep_observe(db_blob, s)
+
+              #Gitrob::BlobObserver.observe(db_blob)
+
               if db_blob.flags.count > 0
                 findings += 1
                 @db_assessment.findings_count += 1
@@ -64,6 +72,10 @@ module Gitrob
 
         def blobs_for_repository(repo)
           github_data_manager.blobs_for_repository(repo)
+        end
+
+        def download_blob(blob)
+          github_data_manager.blob_string_for_blob_repo(blob)
         end
 
         def repository_count

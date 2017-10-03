@@ -1,6 +1,7 @@
 require "yaml"
 require "json"
 require "ostruct"
+require "base64"
 
 require "rubygems"
 require "thor"

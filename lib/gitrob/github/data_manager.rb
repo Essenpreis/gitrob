@@ -7,13 +7,13 @@ module Gitrob
                   :repositories
 
       def initialize(logins, client_manager)
-        @logins                  = logins
-        @client_manager          = client_manager
-        @unknown_logins          = []
-        @owners                  = []
-        @repositories            = []
+        @logins = logins
+        @client_manager = client_manager
+        @unknown_logins = []
+        @owners = []
+        @repositories = []
         @repositories_for_owners = {}
-        @mutex                   = Mutex.new
+        @mutex = Mutex.new
       end
 
       def gather_owners(thread_pool)
@@ -24,7 +24,7 @@ module Gitrob
           next unless owner["type"] == "Organization"
           get_members(owner, thread_pool) if owner["type"] == "Organization"
         end
-        @owners = @owners.uniq { |o| o["login"] }
+        @owners = @owners.uniq {|o| o["login"]}
       end
 
       def gather_repositories(thread_pool)
@@ -41,6 +41,20 @@ module Gitrob
 
       def repositories_for_owner(owner)
         @repositories_for_owners[owner["login"]]
+      end
+
+
+      def blob_string_for_blob_repo(blob)
+        download_blob(blob)
+      rescue ::Github::Error::Forbidden => e
+        # Hidden GitHub feature?
+        raise e unless e.message.include?("403 Repository access blocked")
+        []
+      rescue ::Github::Error::NotFound => e
+        []
+      rescue ::Github::Error::ServiceError => e
+        raise e unless e.message.include?("409 Git Repository is empty")
+        []
       end
 
       def blobs_for_repository(repository)
@@ -89,18 +103,50 @@ module Gitrob
         else
           github_client do |client|
             client.repos.list(
-              :user => owner["login"]).reject { |r| r["fork"] }
+                :user => owner["login"]).reject {|r| r["fork"]}
           end
         end
+      end
+
+
+      def download_blob(blob)
+        # construct url to retrieve file for loop
+        # file_url = repo.url + blob.path
+        # tree:        GET /repos/:owner/:repo/git/trees/:sha?recursive=1
+        #download file GET /repos/:owner/:repo/contents/:path
+
+        github_client2 do |client|
+          # "repos/#{repository[:full_name]}/contents/#{blob[:path]}" )
+          # https://developer.github.com/v3/repos/contents/#get-contents
+          #content = File.read('Input.txt')
+
+
+          bo = client.get_request(blob.url)["content"]
+          decode_base64_content = Base64.decode64(bo)
+
+          # TODO: Decode handling
+          # TODO: Consider directories to be ignored
+
+        end
+      end
+
+      def github_client2
+        client = @client_manager.sample
+        yield client
+      rescue ::Github::Error::Forbidden => e
+        raise e unless e.message.include?("API rate limit exceeded")
+        @client_manager.remove(client)
+      rescue ::Github::Error::Unauthorized
+        @client_manager.remove(client)
       end
 
       def get_blobs(repository)
         github_client do |client|
           client.get_request(
-            "repos/#{repository[:full_name]}/git/trees/" \
+              "repos/#{repository[:full_name]}/git/trees/" \
             "#{repository[:default_branch]}",
-            ::Github::ParamsHash.new(:recursive => 1))["tree"]
-            .reject { |b| b["type"] != "blob" }
+              ::Github::ParamsHash.new(:recursive => 1))["tree"]
+              .reject {|b| b["type"] != "blob"}
         end
       end
 
@@ -120,7 +166,7 @@ module Gitrob
       end
 
       def with_mutex
-        @mutex.synchronize { yield }
+        @mutex.synchronize {yield}
       end
     end
   end

@@ -1,16 +1,35 @@
 module Gitrob
   class BlobObserver
     SIGNATURES_FILE_PATH = File.expand_path(
-      "../../../signatures.json", __FILE__)
+        "../../../signatures.json", __FILE__)
     CUSTOM_SIGNATURES_FILE_PATH = File.join(
-      Dir.home, ".gitrobsignatures")
+        Dir.home, ".gitrobsignatures")
 
     REQUIRED_SIGNATURE_KEYS = %w(part type pattern caption description)
-    ALLOWED_TYPES           = %w(regex match)
-    ALLOWED_PARTS           = %w(path filename extension)
+    ALLOWED_TYPES = %w(regex match)
+    ALLOWED_PARTS = %w(path filename extension content)
 
-    class Signature < OpenStruct; end
-    class CorruptSignaturesError < StandardError; end
+    class Signature < OpenStruct;
+    end
+    class CorruptSignaturesError < StandardError;
+    end
+
+    def self.deep_observe(blob, blob_string)
+      signatures.each do |signature|
+        if signature.part == "content"
+          observe_with_content_regex_signature(blob, signature, blob_string)
+        else
+          if signature.type == "match"
+            observe_with_match_signature(blob, signature)
+          else
+            observe_with_regex_signature(blob, signature)
+          end
+        end
+      end
+      blob.flags_count = blob.flags.count
+      blob.save
+      blob.flags_count
+    end
 
     def self.observe(blob)
       signatures.each do |signature|
@@ -88,7 +107,7 @@ module Gitrob
       REQUIRED_SIGNATURE_KEYS.each do |key|
         unless signature.key?(key)
           fail CorruptSignaturesError,
-               "Missing required signature key: #{key}"
+               "Missing required signature key: #{key}" #TODO: part is not necessary for content sigs
         end
       end
     end
@@ -111,21 +130,34 @@ module Gitrob
       haystack = blob.send(signature.part.to_sym)
       return unless haystack == signature.pattern
       blob.add_flag(
-        :caption     => signature.caption,
-        :description => signature.description,
-        :assessment  => blob.assessment
+          :caption => signature.caption,
+          :description => signature.description,
+          :assessment => blob.assessment
       )
     end
 
     def self.observe_with_regex_signature(blob, signature)
       haystack = blob.send(signature.part.to_sym)
-      regex    = Regexp.new(signature.pattern, Regexp::IGNORECASE)
+      regex = Regexp.new(signature.pattern, Regexp::IGNORECASE)
       return if regex.match(haystack).nil?
       blob.add_flag(
-        :caption     => signature.caption,
-        :description => signature.description,
-        :assessment  => blob.assessment
+          :caption => signature.caption,
+          :description => signature.description,
+          :assessment => blob.assessment
       )
+    end
+
+    def self.observe_with_content_regex_signature(blob, signature, blob_string)
+      regex = Regexp.new(signature.pattern, Regexp::IGNORECASE)
+      blob_string.each_line do |haystack|
+        next if regex.match(haystack).nil?
+        blob.add_flag(
+            :caption => signature.caption,
+            :description => signature.description,
+            :assessment => blob.assessment
+        )
+      end
+
     end
   end
 end

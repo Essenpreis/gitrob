@@ -48,9 +48,11 @@ module Gitrob
       end
 
       def save_blob(blob, repository, owner)
+        
         allowed_columns = Gitrob::Models::Blob.allowed_columns
         data = blob.select { |k, _v| allowed_columns.include?(k.to_sym) }
         blob = Gitrob::Models::Blob.new(data)
+        
         blob.repository = repository
         blob.owner = owner
         self.blobs_count += 1

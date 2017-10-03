@@ -1,14 +1,53 @@
 [
-
   {
     "part": "content",
     "type": "regex",
-    "pattern": "password",
+    "pattern": "passw[a-z]*d",
     "caption": "Contains password",
     "description": null
   },
-
-
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "passkey",
+    "caption": "Contains passkey",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "credential",
+    "caption": "Contains credential",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "key",
+    "caption": "Contains key",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "cert",
+    "caption": "Contains cert",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "certificate",
+    "caption": "Contains certificate",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "secret",
+    "caption": "Contains secret",
+    "description": null
+  },
   {
     "part": "filename",
     "type": "regex",

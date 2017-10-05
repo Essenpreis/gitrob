@@ -1,0 +1,24 @@
+
+http://rubular.com/r/3P3cdrXhgm
+
+Pattern: ^.*["]?passw[a-z]*d\s*["]?[:=]{1}.+$
+
+//match
+password=abc123
+password =abc123
+password=   $$$ddididi`^
+password          =     bbbbb
+"password": "abc123"
+" password": "abc123"
+" password ": "abc123"
+    password:    abc123
+broker_password: "9530caf06c29511a3b4ce4bf04" #
+password="my_pw" // should be foundPlease generate random password for each landscape
+
+
+password    =  my_pw // should not be found if my_pw is a variable -> buy false positive here
+
+//no match
+//This is my password in a code comment
+passwd=
+password =

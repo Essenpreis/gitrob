@@ -38,4 +38,5 @@ tmtags
 *.un~
 Session.vim
 .netrwhist
+.rakeTasks
 *~

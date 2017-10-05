@@ -2,49 +2,56 @@
   {
     "part": "content",
     "type": "regex",
-    "pattern": "passw[a-z]*d",
-    "caption": "Contains password",
+    "pattern": "^.*[\"]?passw[a-z]*d\\s*[\"]?\\s*[:=]{1}.+$",
+    "caption": "Contains password or passwd",
+    "description": "http://rubular.com/r/3P3cdrXhgm"
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*[\"]?pass\\s*[\"]?\\s*[:=]{1}.+$",
+    "caption": "Contains pass",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "passkey",
+    "pattern": "^.*[\"]?pw\\s*[\"]?\\s*[:=]{1}.+$",
+    "caption": "Contains pw",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*[\"]?passkey\\s*[\"]?\\s*[:=]{1}.+$",
     "caption": "Contains passkey",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "credential",
-    "caption": "Contains credential",
+    "pattern": "^.*[\"]?credential[s]*\\s*[\"]?\\s*[:=]{1}.+$",
+    "caption": "Contains credential(s)",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "key",
-    "caption": "Contains key",
+    "pattern": "^.*[\"]?cred[s]*\\s*[\"]?\\s*[:=]{1}.+$",
+    "caption": "Contains cred(s)",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "cert",
-    "caption": "Contains cert",
+    "pattern": "^.*[\"]?key[s]?\\s*[\"]?\\s*[:=]{1}.+$",
+    "caption": "Contains key(s)",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "certificate",
-    "caption": "Contains certificate",
-    "description": null
-  },
-  {
-    "part": "content",
-    "type": "regex",
-    "pattern": "secret",
+    "pattern": "^.*[\"]?secret\\s*[\"]?\s*[:=]{1}.+$",
     "caption": "Contains secret",
     "description": null
   },

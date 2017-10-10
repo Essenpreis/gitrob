@@ -29,7 +29,6 @@ module Gitrob
               #info("Loaded #{Gitrob::BlobObserver.signatures.count} signatures")
               blob_string = download_blob(blob)
               Gitrob::BlobObserver.deep_observe(db_blob, blob_string)
-
               #Gitrob::BlobObserver.observe(db_blob)
 
               if db_blob.flags.count > 0

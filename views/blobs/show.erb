@@ -3,10 +3,10 @@
     <% @blob.flags.each do |flag| %>
       <div class="alert alert-warning" role="alert">
         <% if flag.caption %>
-          <p><strong><%=h flag.caption %></strong></p>
+            <p><strong><a href="<%=h @blob.html_url + "#L" +flag.description %>"><%=h flag.caption %></strong></a></p>
         <% end %>
         <% if flag.description %>
-          <p><%=h flag.description %></p>
+          <p>Line <%=h flag.description %></p>
         <% end %>
       </div>
     <% end %>

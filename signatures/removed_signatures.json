@@ -1,0 +1,148 @@
+  //TODO Sigs that lead to many false positives
+  //TODO files to ignore (e.g. *.md, *.rst)
+  //TODO patterns for default pws
+
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?passw[a-z0]*d\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "pattern": "^.*['\"]?passw[a-z0]*d\\s*['\"]?\\s*[=]+\s*['\"]+.+['\"]+",
+    "caption": "Contains password or passwd",
+    "description": "http://rubular.com/r/bK5BWKBSal"
+  },
+
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?pass\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains pass",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?pw\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains pw",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?passkey\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains passkey",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?credential[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains credential(s)",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?cred[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains cred(s)",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?key[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains key(s)",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?secret[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains secret",
+    "description": null
+  },
+
+
+
+
+
+  // Sigs of original master - leading to to many fpvs
+
+  {
+    "part": "filename",
+    "type": "regex",
+    "pattern": "password",
+    "caption": "Contains word: password",
+    "description": null
+  },
+  {
+    "part": "extension",
+    "type": "regex",
+    "pattern": "\\Asql(dump)?\\z",
+    "caption": "SQL dump file",
+    "description": null
+  },
+  {
+    "part": "filename",
+    "type": "match",
+    "pattern": "database.yml",
+    "caption": "Potential Ruby On Rails database configuration file",
+    "description": "Might contain database credentials."
+  },
+  {
+    "part": "filename",
+    "type": "regex",
+    "pattern": "credential",
+    "caption": "Contains word: credential",
+    "description": null
+  },
+  {
+    "part": "filename",
+    "type": "regex",
+    "pattern": "password",
+    "caption": "Contains word: password",
+    "description": null
+  },
+  {
+    "part": "filename",
+    "type": "regex",
+    "pattern": "secret",
+    "caption": "Contains word: secret",
+    "description": null
+  },
+  {
+    "part": "extension",
+    "type": "match",
+    "pattern": "gnucash",
+    "caption": "GnuCash database file",
+    "description": null
+  },
+
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?credential[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains credential(s)",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?cred[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains cred(s)",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?key[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains key(s)",
+    "description": null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?secret[s]?\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
+    "caption": "Contains secret",
+    "description": null
+  },
+]

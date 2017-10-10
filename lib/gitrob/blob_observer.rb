@@ -150,11 +150,13 @@ module Gitrob
     def self.observe_with_content_regex_signature(blob, signature, blob_string)
       regex = Regexp.new(signature.pattern, Regexp::IGNORECASE)
       #TODO: check for GITROBIGNORE tag in order to ignore finding
+      l=0
       blob_string.each_line do |haystack|
+        l += 1
         next if regex.match(haystack).nil?
         blob.add_flag(
             :caption => signature.caption,
-            :description => signature.description,
+            :description => l.to_s, #TODO add finding location href
             :assessment => blob.assessment
         )
       end

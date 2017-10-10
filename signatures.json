@@ -2,58 +2,85 @@
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?passw[a-z]*d\\s*[\"]?\\s*[:=]{1}.+$",
+    "pattern": "^.*['\"]?passw[a-z0]*d\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
     "caption": "Contains password or passwd",
-    "description": "http://rubular.com/r/3P3cdrXhgm"
+    "description": null
   },
+
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?pass\\s*[\"]?\\s*[:=]{1}.+$",
+    "pattern": "^.*['\"]?pass\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
     "caption": "Contains pass",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?pw\\s*[\"]?\\s*[:=]{1}.+$",
+    "pattern": "^.*['\"]?pw\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
     "caption": "Contains pw",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?passkey\\s*[\"]?\\s*[:=]{1}.+$",
+    "pattern": "^.*['\"]?passkey\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
     "caption": "Contains passkey",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?credential[s]*\\s*[\"]?\\s*[:=]{1}.+$",
+    "pattern": "^.*['\"]?credential[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
     "caption": "Contains credential(s)",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?cred[s]*\\s*[\"]?\\s*[:=]{1}.+$",
+    "pattern": "^.*['\"]?cred[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
     "caption": "Contains cred(s)",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?key[s]?\\s*[\"]?\\s*[:=]{1}.+$",
-    "caption": "Contains key(s)",
+    "pattern": "^.*['\"]?secret[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
+    "caption": "Contains secret",
     "description": null
   },
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*[\"]?secret\\s*[\"]?\s*[:=]{1}.+$",
-    "caption": "Contains secret",
+    "pattern": "^.*['\"]?key[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+\\S{240,}['\"]+",
+    "caption": "Contains key(s)",
     "description": null
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+    "part": "filename",
+    "type": "match",
+    "pattern": "terraform.tfvars",
+    "caption": "Terraform variable config file",
+    "description": "Might contain credentials for terraform providers"
   },
   {
     "part": "filename",
@@ -303,13 +330,6 @@
   {
     "part": "filename",
     "type": "match",
-    "pattern": "database.yml",
-    "caption": "Potential Ruby On Rails database configuration file",
-    "description": "Might contain database credentials."
-  },
-  {
-    "part": "filename",
-    "type": "match",
     "pattern": "settings.py",
     "caption": "Django configuration file",
     "description": "Might contain database credentials, online storage system credentials, secret keys, etc."
@@ -363,20 +383,7 @@
     "caption": "Network traffic capture file",
     "description": null
   },
-  {
-    "part": "extension",
-    "type": "regex",
-    "pattern": "\\Asql(dump)?\\z",
-    "caption": "SQL dump file",
-    "description": null
-  },
-  {
-    "part": "extension",
-    "type": "match",
-    "pattern": "gnucash",
-    "caption": "GnuCash database file",
-    "description": null
-  },
+
   {
     "part": "filename",
     "type": "regex",
@@ -389,27 +396,6 @@
     "type": "regex",
     "pattern": "dump",
     "caption": "Contains word: dump",
-    "description": null
-  },
-  {
-    "part": "filename",
-    "type": "regex",
-    "pattern": "password",
-    "caption": "Contains word: password",
-    "description": null
-  },
-  {
-    "part": "filename",
-    "type": "regex",
-    "pattern": "credential",
-    "caption": "Contains word: credential",
-    "description": null
-  },
-  {
-    "part": "filename",
-    "type": "regex",
-    "pattern": "secret",
-    "caption": "Contains word: secret",
     "description": null
   },
   {
@@ -593,13 +579,6 @@
     "pattern": "\\A\\.?npmrc\\z",
     "caption": "NPM configuration file",
     "description": "Might contain credentials for NPM registries"
-  },
-  {
-    "part": "filename",
-    "type": "match",
-    "pattern": "terraform.tfvars",
-    "caption": "Terraform variable config file",
-    "description": "Might contain credentials for terraform providers"
   },
   {
     "part": "filename",

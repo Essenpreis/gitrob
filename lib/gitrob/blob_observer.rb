@@ -148,6 +148,13 @@ module Gitrob
     end
 
     def self.observe_with_content_regex_signature(blob, signature, blob_string)
+      #check extension_regex
+      if signature.extension_pattern != nil
+        haystack = blob.send("extension")
+        regex = Regexp.new(signature.extension_pattern, Regexp::IGNORECASE)
+        return if regex.match(haystack).nil?
+      end
+
       regex = Regexp.new(signature.pattern, Regexp::IGNORECASE)
       #TODO: check for GITROBIGNORE tag in order to ignore finding
       l=0

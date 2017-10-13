@@ -1,12 +1,12 @@
   //TODO Sigs that lead to many false positives
   //TODO files to ignore (e.g. *.md, *.rst)
   //TODO patterns for default pws
+  //TODO: Scan in history
 
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?passw[a-z0]*d\\s*['\"]?\\s*([=]+\\s*['\"]+|[:]+).+$",
-    "pattern": "^.*['\"]?passw[a-z0]*d\\s*['\"]?\\s*[=]+\s*['\"]+.+['\"]+",
     "caption": "Contains password or passwd",
     "description": "http://rubular.com/r/bK5BWKBSal"
   },

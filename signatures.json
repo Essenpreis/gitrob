@@ -56,6 +56,100 @@
     "caption" : "Contains credential[s]?",
     "description" : null
   },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?pem\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
+    "caption" : "Contains pem",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "pattern": "^.*['\"]?p12\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
+    "caption" : "Contains p12",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*key[s]?\\s*[:]\\s*\\S{240,}$",
+    "caption" : "Contains key[s]?",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*passw[a-z0]*d\\s*[:]\\s*.+$",
+    "caption" : "Contains passw[a-z0]*d",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*pass\\s*[:]\\s*.+$",
+    "caption" : "Contains pass",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*pw\\s*[:]\\s*.+$",
+    "caption" : "Contains pw",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*passkey\\s*[:]\\s*\\S{240,}$",
+    "caption" : "Contains passkey",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*secret\\s*[:]\\s*.+$",
+    "caption" : "Contains secret",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*cred[s]?\\s*[:]\\s*.+$",
+    "caption" : "Contains cred[s]?",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*credential[s]?\\s*[:]\\s*.+$",
+    "caption" : "Contains credential[s]?",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*pem\\s*[:]\\s*.+$",
+    "caption" : "Contains pem",
+    "description" : null
+  },
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*p12\\s*[:]\\s*.+$",
+    "caption" : "Contains p12",
+    "description" : null
+  },
 
 
 

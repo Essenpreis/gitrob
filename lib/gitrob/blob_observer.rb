@@ -14,10 +14,13 @@ module Gitrob
     class CorruptSignaturesError < StandardError;
     end
 
-    def self.deep_observe(blob, blob_string)
+    def self.observe(blob, blob_string)
       signatures.each do |signature|
         if signature.part == "content"
-          observe_with_content_regex_signature(blob, signature, blob_string)
+          if blob_string != nil
+            #assuming blob_string is given in this case
+            observe_with_content_regex_signature(blob, signature, blob_string)
+          end
         else
           if signature.type == "match"
             observe_with_match_signature(blob, signature)
@@ -31,6 +34,7 @@ module Gitrob
       blob.flags_count
     end
 
+=begin
     def self.observe(blob)
       signatures.each do |signature|
         if signature.type == "match"
@@ -43,6 +47,7 @@ module Gitrob
       blob.save
       blob.flags_count
     end
+=end
 
     def self.signatures
       load_signatures! unless @signatures
@@ -163,7 +168,7 @@ module Gitrob
         next if regex.match(haystack).nil?
         blob.add_flag(
             :caption => signature.caption,
-            :description => l.to_s, #TODO add finding location href
+            :description => signature.description, #TODO add finding location href
             :assessment => blob.assessment
         )
       end

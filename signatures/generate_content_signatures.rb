@@ -1,8 +1,6 @@
 class GenerateContentSignatures
 
-  keywords = ["key[s]?", "passw[a-z0]*d", "pass", "pw", "passkey", "secret", "cred[s]?", "credential[s]?", "pem", "p12"]
-  # preRegex ="^.*['\"]?"
-  # postRegex ="\\s*['\"]?\\s*[=]+\\s*['\"]+.+$"
+  keywords = ["passw[a-z0]*d", "pass", "pw", "passkey", "secret", "cred[s]?", "credential[s]?", "pem", "p12", "key[s]?"]
 
   #"" Creds after = in '' or ""
   keywords.each do |word|
@@ -16,7 +14,7 @@ class GenerateContentSignatures
       puts '"pattern": "^.*[\'\"]?'+word+'\\\s*[\'\"]?\\\s*[=]+\\\s*[\'\"]+.+[\'\"]+",'
     end
 
-    puts "\"caption\" : \"Contains #{word}\","
+    puts "\"caption\" : \"Contains #{word} after equal sign\","
     puts "\"description\" : null"
     puts "},"
   end
@@ -35,7 +33,7 @@ class GenerateContentSignatures
       puts  '"pattern": "^.*'+word+'\\\s*[:]\\\s*.+$",'
     end
 
-    puts "\"caption\" : \"Contains #{word}\","
+    puts "\"caption\" : \"Contains #{word} after colon\","
     puts "\"description\" : null"
     puts "},"
   end

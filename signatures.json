@@ -3,79 +3,71 @@
   {
     "part": "content",
     "type": "regex",
-    "pattern": "^.*['\"]?key[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+\\S{240,}['\"]+",
-    "caption" : "Contains key[s]?",
-    "description" : null
-  },
-  {
-    "part": "content",
-    "type": "regex",
     "pattern": "^.*['\"]?passw[a-z0]*d\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains passw[a-z0]*d",
+    "caption" : "Contains passw[a-z0]*d after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?pass\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains pass",
+    "caption" : "Contains pass after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?pw\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains pw",
+    "caption" : "Contains pw after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?passkey\\s*['\"]?\\s*[=]+\\s*['\"]+\\S{240,}['\"]+",
-    "caption" : "Contains passkey",
+    "caption" : "Contains passkey after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?secret\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains secret",
+    "caption" : "Contains secret after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?cred[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains cred[s]?",
+    "caption" : "Contains cred[s]? after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?credential[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains credential[s]?",
+    "caption" : "Contains credential[s]? after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?pem\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains pem",
+    "caption" : "Contains pem after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
     "pattern": "^.*['\"]?p12\\s*['\"]?\\s*[=]+\\s*['\"]+.+['\"]+",
-    "caption" : "Contains p12",
+    "caption" : "Contains p12 after equal sign",
     "description" : null
   },
   {
     "part": "content",
     "type": "regex",
-    "extension_pattern": "json|yaml|yml|conf|config",
-    "pattern": "^.*key[s]?\\s*[:]\\s*\\S{240,}$",
-    "caption" : "Contains key[s]?",
+    "pattern": "^.*['\"]?key[s]?\\s*['\"]?\\s*[=]+\\s*['\"]+\\S{240,}['\"]+",
+    "caption" : "Contains key[s]? after equal sign",
     "description" : null
   },
   {
@@ -83,7 +75,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*passw[a-z0]*d\\s*[:]\\s*.+$",
-    "caption" : "Contains passw[a-z0]*d",
+    "caption" : "Contains passw[a-z0]*d after colon",
     "description" : null
   },
   {
@@ -91,7 +83,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*pass\\s*[:]\\s*.+$",
-    "caption" : "Contains pass",
+    "caption" : "Contains pass after colon",
     "description" : null
   },
   {
@@ -99,7 +91,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*pw\\s*[:]\\s*.+$",
-    "caption" : "Contains pw",
+    "caption" : "Contains pw after colon",
     "description" : null
   },
   {
@@ -107,7 +99,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*passkey\\s*[:]\\s*\\S{240,}$",
-    "caption" : "Contains passkey",
+    "caption" : "Contains passkey after colon",
     "description" : null
   },
   {
@@ -115,7 +107,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*secret\\s*[:]\\s*.+$",
-    "caption" : "Contains secret",
+    "caption" : "Contains secret after colon",
     "description" : null
   },
   {
@@ -123,7 +115,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*cred[s]?\\s*[:]\\s*.+$",
-    "caption" : "Contains cred[s]?",
+    "caption" : "Contains cred[s]? after colon",
     "description" : null
   },
   {
@@ -131,7 +123,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*credential[s]?\\s*[:]\\s*.+$",
-    "caption" : "Contains credential[s]?",
+    "caption" : "Contains credential[s]? after colon",
     "description" : null
   },
   {
@@ -139,7 +131,7 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*pem\\s*[:]\\s*.+$",
-    "caption" : "Contains pem",
+    "caption" : "Contains pem after colon",
     "description" : null
   },
   {
@@ -147,11 +139,17 @@
     "type": "regex",
     "extension_pattern": "json|yaml|yml|conf|config",
     "pattern": "^.*p12\\s*[:]\\s*.+$",
-    "caption" : "Contains p12",
+    "caption" : "Contains p12 after colon",
     "description" : null
   },
-
-
+  {
+    "part": "content",
+    "type": "regex",
+    "extension_pattern": "json|yaml|yml|conf|config",
+    "pattern": "^.*key[s]?\\s*[:]\\s*\\S{240,}$",
+    "caption" : "Contains key[s]? after colon",
+    "description" : null
+  },
 
 
 

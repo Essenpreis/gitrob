@@ -2,5 +2,8 @@
 # :nocov:
 require "gitrob"
 
+require 'openssl'
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
 Gitrob::CLI.start(ARGV)
 # :nocov:

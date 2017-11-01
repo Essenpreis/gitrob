@@ -18,7 +18,7 @@ require "#{File.dirname(__FILE__)}/support/fake_github"
 
 String.disable_colorization(true)
 
-SQL_CONNECTION_URI = "postgres://gitrob:gitrob@localhost:5432/gitrob_test"
+SQL_CONNECTION_URI = "postgres://gitrob:gitrob@192.168.72.129:5432/gitrob2"
 DB_MIGRATIONS_PATH = File.expand_path("../../db/migrations", __FILE__)
 
 Sequel.extension :migration, :core_extensions

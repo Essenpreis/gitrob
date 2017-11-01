@@ -1,0 +1,10 @@
+  password =
+  "password" = "my_pw //harmless - no closing quotes
+  "password" = 'my_pw //harmless - no closing quotes
+        "password": "Mustermann"
+        FORGOT_PASSWORD_LINK
+        new Prompt("password", "password", "Password")
+        if (!StringUtils.hasText(password)) {
+        private String privatepassword;
+        this.privatepassword = privatepassword
+        ALTER TABLE users ADD COLUMN passwd_lastmodified TIMESTAMP NULL;

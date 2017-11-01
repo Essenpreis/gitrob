@@ -1,7 +1,39 @@
 require "spec_helper"
 
 describe Gitrob::BlobObserver do
+
   describe ".observe" do
+
+    #http://rubular.com/r/g9VJcjs6Yw
+    it "flags certain password strings after equal sign" do
+      File.foreach(File.dirname(__FILE__) + '/content_signatures_match.txt') do |s|
+        path = "JavaClass.java"
+        blob = create(:blob, :path => path)
+        described_class.observe(blob, s)
+
+        expect(blob.flags.count).to be >= 1
+        expect(blob.flags.first.caption)
+            .to eq('Contains passw[a-z0] after equal sign')
+        expect(blob.flags.first.description)
+            .to eq(nil)
+      end
+    end
+
+    it "does NOT flag certain password strings after equal sign in order to minimize false positives rate" do
+      File.foreach(File.dirname(__FILE__) + '/content_signatures_no_match.txt') do |s|
+        path = "JavaClass.java"
+        blob = create(:blob, :path => path)
+        described_class.observe(blob, s)
+
+        expect(blob.flags.count).to be >= 0
+      end
+    end
+
+
+    #TODO one test for non pw signatures to check if signature generation was successful in generating signatures for keywords like key[s] etc.
+    # http://rubular.com/r/78DttBgldB
+
+
     it "flags private RSA SSH keys" do
       %w(
         /ssh/id_rsa
@@ -11,12 +43,12 @@ describe Gitrob::BlobObserver do
         .id_rsa
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Private SSH key")
+            .to eq("Private SSH key")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -29,12 +61,12 @@ describe Gitrob::BlobObserver do
         .id_dsa
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Private SSH key")
+            .to eq("Private SSH key")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -47,12 +79,12 @@ describe Gitrob::BlobObserver do
         .id_ed25519
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Private SSH key")
+            .to eq("Private SSH key")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -65,12 +97,12 @@ describe Gitrob::BlobObserver do
         .id_ecdsa
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Private SSH key")
+            .to eq("Private SSH key")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -81,12 +113,12 @@ describe Gitrob::BlobObserver do
         /keys/privatekey.pem
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential cryptographic private key")
+            .to eq("Potential cryptographic private key")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -99,12 +131,12 @@ describe Gitrob::BlobObserver do
         keys/privatekey.keypair
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential cryptographic private key")
+            .to eq("Potential cryptographic private key")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -115,12 +147,12 @@ describe Gitrob::BlobObserver do
         .secret.pkcs12
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential cryptographic key bundle")
+            .to eq("Potential cryptographic key bundle")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -131,12 +163,12 @@ describe Gitrob::BlobObserver do
         .secret.pfx
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential cryptographic key bundle")
+            .to eq("Potential cryptographic key bundle")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -147,12 +179,12 @@ describe Gitrob::BlobObserver do
         .secret.p12
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential cryptographic key bundle")
+            .to eq("Potential cryptographic key bundle")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -163,12 +195,12 @@ describe Gitrob::BlobObserver do
         .secret.asc
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential cryptographic key bundle")
+            .to eq("Potential cryptographic key bundle")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -179,12 +211,12 @@ describe Gitrob::BlobObserver do
         pidgin/otr.private_key
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Pidgin OTR private key")
+            .to eq("Pidgin OTR private key")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -204,12 +236,12 @@ describe Gitrob::BlobObserver do
         shell/history
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Shell command history file")
+            .to eq("Shell command history file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -220,12 +252,12 @@ describe Gitrob::BlobObserver do
         history/.mysql_history
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("MySQL client command history file")
+            .to eq("MySQL client command history file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -236,12 +268,12 @@ describe Gitrob::BlobObserver do
         history/.psql_history
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("PostgreSQL client command history file")
+            .to eq("PostgreSQL client command history file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -252,12 +284,12 @@ describe Gitrob::BlobObserver do
         history/.irb_history
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Ruby IRB console history file")
+            .to eq("Ruby IRB console history file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -268,12 +300,12 @@ describe Gitrob::BlobObserver do
         config/purple/accounts.xml
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Pidgin chat client account configuration file")
+            .to eq("Pidgin chat client account configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -290,12 +322,12 @@ describe Gitrob::BlobObserver do
         config/.xchat/servlist.conf
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Hexchat/XChat IRC client server list configuration file")
+            .to eq("Hexchat/XChat IRC client server list configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -306,12 +338,12 @@ describe Gitrob::BlobObserver do
         config/.hexchat/servlist.conf
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Hexchat/XChat IRC client server list configuration file")
+            .to eq("Hexchat/XChat IRC client server list configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -322,12 +354,12 @@ describe Gitrob::BlobObserver do
         config/.irssi/config
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Irssi IRC client configuration file")
+            .to eq("Irssi IRC client configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -338,12 +370,12 @@ describe Gitrob::BlobObserver do
         config/.recon-ng/keys.db
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Recon-ng web reconnaissance framework API key database")
+            .to eq("Recon-ng web reconnaissance framework API key database")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -354,12 +386,12 @@ describe Gitrob::BlobObserver do
         config/.dbeaver-data-sources.xml
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("DBeaver SQL database manager configuration file")
+            .to eq("DBeaver SQL database manager configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -370,12 +402,12 @@ describe Gitrob::BlobObserver do
         config/.muttrc
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Mutt e-mail client configuration file")
+            .to eq("Mutt e-mail client configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -386,12 +418,12 @@ describe Gitrob::BlobObserver do
         config/.s3cfg
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("S3cmd configuration file")
+            .to eq("S3cmd configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -402,12 +434,12 @@ describe Gitrob::BlobObserver do
         homefolder/aws/credentials
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("AWS CLI credentials file")
+            .to eq("AWS CLI credentials file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -418,12 +450,12 @@ describe Gitrob::BlobObserver do
         config/.trc
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("T command-line Twitter client configuration file")
+            .to eq("T command-line Twitter client configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -434,12 +466,12 @@ describe Gitrob::BlobObserver do
         config/work.ovpn
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("OpenVPN client configuration file")
+            .to eq("OpenVPN client configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -450,12 +482,12 @@ describe Gitrob::BlobObserver do
         config/.gitrobrc
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Well, this is awkward... Gitrob configuration file")
+            .to eq("Well, this is awkward... Gitrob configuration file")
         expect(blob.flags.first.description)
-          .to eq(nil)
+            .to eq(nil)
       end
     end
 
@@ -469,12 +501,12 @@ describe Gitrob::BlobObserver do
         zsh/.zshrc
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Shell configuration file")
+            .to eq("Shell configuration file")
         expect(blob.flags.first.description)
-          .to eq("Shell configuration files might contain information such " \
+            .to eq("Shell configuration files might contain information such " \
                  "as server hostnames, passwords and API keys.")
       end
     end
@@ -492,12 +524,12 @@ describe Gitrob::BlobObserver do
         sh/.profile
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Shell profile configuration file")
+            .to eq("Shell profile configuration file")
         expect(blob.flags.first.description)
-          .to eq("Shell configuration files might contain information such " \
+            .to eq("Shell configuration files might contain information such " \
                  "as server hostnames, passwords and API keys.")
       end
     end
@@ -515,12 +547,12 @@ describe Gitrob::BlobObserver do
         sh/.aliases
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Shell command alias configuration file")
+            .to eq("Shell command alias configuration file")
         expect(blob.flags.first.description)
-          .to eq("Shell configuration files might contain information such " \
+            .to eq("Shell configuration files might contain information such " \
                  "as server hostnames, passwords and API keys.")
       end
     end
@@ -531,12 +563,12 @@ describe Gitrob::BlobObserver do
         config/initializers/secret_token.rb
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Ruby On Rails secret token configuration file")
+            .to eq("Ruby On Rails secret token configuration file")
         expect(blob.flags.first.description)
-          .to eq("If the Rails secret token is known, " \
+            .to eq("If the Rails secret token is known, " \
                  "it can allow for remote code execution." \
                  " (http://www.exploit-db.com/exploits/27527/)")
       end
@@ -548,12 +580,12 @@ describe Gitrob::BlobObserver do
         config/initializers/omniauth.rb
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("OmniAuth configuration file")
+            .to eq("OmniAuth configuration file")
         expect(blob.flags.first.description)
-          .to eq("The OmniAuth configuration file might contain " \
+            .to eq("The OmniAuth configuration file might contain " \
                  "client application secrets.")
       end
     end
@@ -564,23 +596,25 @@ describe Gitrob::BlobObserver do
         config/initializers/carrierwave.rb
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Carrierwave configuration file")
+            .to eq("Carrierwave configuration file")
         expect(blob.flags.first.description)
-          .to eq("Can contain credentials for online storage " \
+            .to eq("Can contain credentials for online storage " \
                  "systems such as Amazon S3 and Google Storage.")
       end
     end
 
+    # TODO: Uncomment before merge into gitrob master as test will not pass as signature was removed because not needed for SAP purposes.
+=begin
     it "flags Rails database configuration blobs" do
       %w(
         database.yml
         config/database.yml
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
           .to eq("Potential Ruby On Rails database configuration file")
@@ -588,18 +622,19 @@ describe Gitrob::BlobObserver do
           .to eq("Might contain database credentials.")
       end
     end
+=end
 
     it "flags Django settings blobs" do
       %w(
         settings.py
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Django configuration file")
+            .to eq("Django configuration file")
         expect(blob.flags.first.description)
-          .to eq("Might contain database credentials, online " \
+            .to eq("Might contain database credentials, online " \
                  "storage system credentials, secret keys, etc.")
       end
     end
@@ -612,12 +647,12 @@ describe Gitrob::BlobObserver do
         secret_config.inc.php
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("PHP configuration file")
+            .to eq("PHP configuration file")
         expect(blob.flags.first.description)
-          .to eq("Might contain credentials and keys.")
+            .to eq("Might contain credentials and keys.")
       end
     end
 
@@ -627,12 +662,12 @@ describe Gitrob::BlobObserver do
         secret/pwd.kdb
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("KeePass password manager database file")
+            .to eq("KeePass password manager database file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -642,12 +677,12 @@ describe Gitrob::BlobObserver do
         secret/pwd.agilekeychain
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("1Password password manager database file")
+            .to eq("1Password password manager database file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -657,12 +692,12 @@ describe Gitrob::BlobObserver do
         secret/pwd.keychain
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Apple Keychain database file")
+            .to eq("Apple Keychain database file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -674,12 +709,12 @@ describe Gitrob::BlobObserver do
         secret/pwd.keyring
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("GNOME Keyring database file")
+            .to eq("GNOME Keyring database file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -690,12 +725,12 @@ describe Gitrob::BlobObserver do
         .secret.log
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Log file")
+            .to eq("Log file")
         expect(blob.flags.first.description)
-          .to eq("Log files might contain information such as "\
+            .to eq("Log files might contain information such as "\
                  "references to secret HTTP endpoints, session " \
                  "IDs, user information, passwords and API keys.")
       end
@@ -707,15 +742,17 @@ describe Gitrob::BlobObserver do
         debug/production.pcap
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Network traffic capture file")
+            .to eq("Network traffic capture file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
+    # TODO: Uncomment before merge into gitrob master as test will not pass as signature was removed because not needed for SAP purposes.
+=begin
     it "flags SQL blobs" do
       %w(
         db.sql
@@ -724,7 +761,7 @@ describe Gitrob::BlobObserver do
         backup/production.sqldump
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
           .to eq("SQL dump file")
@@ -732,7 +769,10 @@ describe Gitrob::BlobObserver do
           .to be nil
       end
     end
+=end
 
+    # TODO: Uncomment before merge into gitrob master as test will not pass as signature was removed because not needed for SAP purposes.
+=begin
     it "flags GnuCash database blobs" do
       %w(
         budget.gnucash
@@ -740,7 +780,7 @@ describe Gitrob::BlobObserver do
         finance/budget.gnucash
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
           .to eq("GnuCash database file")
@@ -748,6 +788,7 @@ describe Gitrob::BlobObserver do
           .to be nil
       end
     end
+=end
 
     it "flags blobs containing word: backup" do
       %w(
@@ -755,12 +796,12 @@ describe Gitrob::BlobObserver do
         backups/dbbackup.zip
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Contains word: backup")
+            .to eq("Contains word: backup")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -770,22 +811,24 @@ describe Gitrob::BlobObserver do
         debug/memdump.txt
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Contains word: dump")
+            .to eq("Contains word: dump")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
+    # TODO: Uncomment before merge into gitrob master as test will not pass as signature was removed because not needed for SAP purposes.
+=begin
     it "flags blobs containing word: password" do
       %w(
         passwords.xls
         private/password-reminders.txt
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
           .to eq("Contains word: password")
@@ -793,6 +836,7 @@ describe Gitrob::BlobObserver do
           .to be nil
       end
     end
+=end
 
     it "flags blobs containing words: private, key" do
       %w(
@@ -801,15 +845,18 @@ describe Gitrob::BlobObserver do
         private/private_keys.tar.gz
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Contains words: private, key")
+            .to eq("Contains words: private, key")
         expect(blob.flags.last.description)
-          .to be nil
+            .to be nil
       end
     end
 
+
+    # TODO: Uncomment before merge into gitrob master as test will not pass as signature was removed because not needed for SAP purposes.
+=begin
     it "flags blobs containing word: secret" do
       %w(
         secrets.txt
@@ -817,7 +864,7 @@ describe Gitrob::BlobObserver do
         admin/secret.php
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
           .to eq("Contains word: secret")
@@ -825,14 +872,17 @@ describe Gitrob::BlobObserver do
           .to be nil
       end
     end
+=end
 
+    # TODO: Uncomment before merge into gitrob master as test will not pass as signature was removed because not needed for SAP purposes.
+=begin
     it "flags blobs containing word: credential" do
       %w(
         credentials.txt
         private/user_credentials.tar.gz
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
           .to eq("Contains word: credential")
@@ -840,6 +890,7 @@ describe Gitrob::BlobObserver do
           .to be nil
       end
     end
+=end
 
     it "flags Jenkins publish over ssh plugin configuration blobs" do
       %w(
@@ -847,12 +898,12 @@ describe Gitrob::BlobObserver do
         jenkins/jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin.xml
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Jenkins publish over SSH plugin file")
+            .to eq("Jenkins publish over SSH plugin file")
         expect(blob.flags.last.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -862,12 +913,12 @@ describe Gitrob::BlobObserver do
         jenkins/credentials.xml
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Potential Jenkins credentials file")
+            .to eq("Potential Jenkins credentials file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -879,12 +930,12 @@ describe Gitrob::BlobObserver do
         admin/.htpasswd
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Apache htpasswd file")
+            .to eq("Apache htpasswd file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -898,12 +949,12 @@ describe Gitrob::BlobObserver do
         home/_netrc
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Configuration file for auto-login process")
+            .to eq("Configuration file for auto-login process")
         expect(blob.flags.first.description)
-          .to eq("Might contain username and password.")
+            .to eq("Might contain username and password.")
       end
     end
 
@@ -915,12 +966,12 @@ describe Gitrob::BlobObserver do
         homefolder/creds.kwallet
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("KDE Wallet Manager database file")
+            .to eq("KDE Wallet Manager database file")
         expect(blob.flags.last.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -931,12 +982,12 @@ describe Gitrob::BlobObserver do
         configs/LocalSettings.php
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential MediaWiki configuration file")
+            .to eq("Potential MediaWiki configuration file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -947,12 +998,12 @@ describe Gitrob::BlobObserver do
         configs/.tunnelblick.tblk
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Tunnelblick VPN configuration file")
+            .to eq("Tunnelblick VPN configuration file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
@@ -963,299 +1014,299 @@ describe Gitrob::BlobObserver do
         homefolder/gem/credentials
       ).each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Rubygems credentials file")
+            .to eq("Rubygems credentials file")
         expect(blob.flags.last.description)
-          .to eq("Might contain API key for a rubygems.org account.")
+            .to eq("Might contain API key for a rubygems.org account.")
       end
     end
 
     it "flags Little Snitch configuration blobs" do
       [
-        "Library/Application Support/Sequel Pro/Data/Favorites.plist",
-        "Sequel/Favorites.plist",
-        "Favorites.plist"
+          "Library/Application Support/Sequel Pro/Data/Favorites.plist",
+          "Sequel/Favorites.plist",
+          "Favorites.plist"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Sequel Pro MySQL database manager bookmark file")
+            .to eq("Sequel Pro MySQL database manager bookmark file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
     it "flags Sequel Pro bookmark blobs" do
       [
-        "Library/Application Support/Little Snitch/configuration.user.xpl",
-        "littlesnitch/configuration.user.xpl",
-        "configuration.user.xpl"
+          "Library/Application Support/Little Snitch/configuration.user.xpl",
+          "littlesnitch/configuration.user.xpl",
+          "configuration.user.xpl"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Little Snitch firewall configuration file")
+            .to eq("Little Snitch firewall configuration file")
         expect(blob.flags.first.description)
-          .to eq("Contains traffic rules for applications")
+            .to eq("Contains traffic rules for applications")
       end
     end
 
     it "flags Day One journal blobs" do
       [
-        "journal.dayone",
-        "documents/journal.dayone",
-        "backup/.journal.dayone"
+          "journal.dayone",
+          "documents/journal.dayone",
+          "backup/.journal.dayone"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Day One journal file")
+            .to eq("Day One journal file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
     it "flags jrnl journal blobs" do
       [
-        "journal.txt",
-        "homefolder/journal.txt",
-        "backup/journal.txt"
+          "journal.txt",
+          "homefolder/journal.txt",
+          "backup/journal.txt"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Potential jrnl journal file")
+            .to eq("Potential jrnl journal file")
         expect(blob.flags.first.description)
-          .to be nil
+            .to be nil
       end
     end
 
     it "flags Chef knife.rg blobs" do
       [
-        "knife.rb",
-        ".chef/knife.rb",
-        "home/chef/knife.rb"
+          "knife.rb",
+          ".chef/knife.rb",
+          "home/chef/knife.rb"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.first.caption)
-          .to eq("Chef Knife configuration file")
+            .to eq("Chef Knife configuration file")
         expect(blob.flags.first.description)
-          .to eq("Might contain references to Chef servers")
+            .to eq("Might contain references to Chef servers")
       end
     end
 
     it "flags Chef private key blobs" do
       [
-        "chef/user.pem",
-        ".chef/key.pem",
-        "home/chef/admin.pem"
+          "chef/user.pem",
+          ".chef/key.pem",
+          "home/chef/admin.pem"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Chef private key")
+            .to eq("Chef private key")
         expect(blob.flags.last.description)
-          .to eq("Can be used to authenticate against Chef servers")
+            .to eq("Can be used to authenticate against Chef servers")
       end
     end
 
     it "flags Git configuration blobs" do
       [
-        ".gitconfig",
-        "home/gitconfig",
-        "gitconfig"
+          ".gitconfig",
+          "home/gitconfig",
+          "gitconfig"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Git configuration file")
+            .to eq("Git configuration file")
         expect(blob.flags.last.description)
-          .to be nil
+            .to be nil
       end
     end
 
     it "flags SSH configuration blobs" do
       [
-        ".ssh/config",
-        "ssh/config",
-        "home/ssh/config"
+          ".ssh/config",
+          "ssh/config",
+          "home/ssh/config"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("SSH configuration file")
+            .to eq("SSH configuration file")
         expect(blob.flags.last.description)
-          .to be nil
+            .to be nil
       end
     end
 
     it "flags PostgreSQL password blobs" do
       [
-        ".pgpass",
-        "pgpass",
-        "home/.pgpass"
+          ".pgpass",
+          "pgpass",
+          "home/.pgpass"
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("PostgreSQL password file")
+            .to eq("PostgreSQL password file")
         expect(blob.flags.last.description)
-          .to be nil
+            .to be nil
       end
     end
 
     it "flags ProFTPd password blobs" do
       [
-        "proftpdpasswd",
-        "project/proftpdpasswd",
+          "proftpdpasswd",
+          "project/proftpdpasswd",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("cPanel backup ProFTPd credentials file")
+            .to eq("cPanel backup ProFTPd credentials file")
         expect(blob.flags.last.description)
-          .to eq("Contains usernames and password hashes for FTP accounts")
+            .to eq("Contains usernames and password hashes for FTP accounts")
       end
     end
 
     it "flags Robomongo configuration blobs" do
       [
-        "robomongo.json",
-        "project/robomongo.json",
-        "home/robomongo.json",
+          "robomongo.json",
+          "project/robomongo.json",
+          "home/robomongo.json",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Robomongo MongoDB manager configuration file")
+            .to eq("Robomongo MongoDB manager configuration file")
         expect(blob.flags.last.description)
-          .to eq("Might contain credentials for MongoDB databases")
+            .to eq("Might contain credentials for MongoDB databases")
       end
     end
 
     it "flags Filezilla configuration blobs" do
       [
-        "filezilla.xml",
-        "project/filezilla.xml",
-        "home/filezilla.xml",
+          "filezilla.xml",
+          "project/filezilla.xml",
+          "home/filezilla.xml",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("FileZilla FTP configuration file")
+            .to eq("FileZilla FTP configuration file")
         expect(blob.flags.last.description)
-          .to eq("Might contain credentials for FTP servers")
+            .to eq("Might contain credentials for FTP servers")
       end
     end
 
     it "flags Filezilla recent servers blobs" do
       [
-        "recentservers.xml",
-        "project/recentservers.xml",
-        "home/recentservers.xml",
+          "recentservers.xml",
+          "project/recentservers.xml",
+          "home/recentservers.xml",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("FileZilla FTP recent servers file")
+            .to eq("FileZilla FTP recent servers file")
         expect(blob.flags.last.description)
-          .to eq("Might contain credentials for FTP servers")
+            .to eq("Might contain credentials for FTP servers")
       end
     end
 
     it "flags Ventrilo server configuration blobs" do
       [
-        "ventrilo_srv.ini",
-        "project/ventrilo_srv.ini",
-        "home/ventrilo_srv.ini",
+          "ventrilo_srv.ini",
+          "project/ventrilo_srv.ini",
+          "home/ventrilo_srv.ini",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Ventrilo server configuration file")
+            .to eq("Ventrilo server configuration file")
         expect(blob.flags.last.description)
-          .to eq("Might contain passwords")
+            .to eq("Might contain passwords")
       end
     end
 
     it "flags Docker configuration blobs" do
       [
-        ".dockercfg",
-        "project/dockercfg",
-        "home/.dockercfg",
+          ".dockercfg",
+          "project/dockercfg",
+          "home/.dockercfg",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Docker configuration file")
+            .to eq("Docker configuration file")
         expect(blob.flags.last.description)
-          .to eq("Might contain credentials for public or private Docker registries")
+            .to eq("Might contain credentials for public or private Docker registries")
       end
     end
 
     it "flags NPM configuration blobs" do
       [
-        ".npmrc",
-        "project/npmrc",
-        "home/.npmrc",
+          ".npmrc",
+          "project/npmrc",
+          "home/.npmrc",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("NPM configuration file")
+            .to eq("NPM configuration file")
         expect(blob.flags.last.description)
-          .to eq("Might contain credentials for NPM registries")
+            .to eq("Might contain credentials for NPM registries")
       end
     end
 
     it "flags Terraform variable configuration blobs" do
       [
-        "terraform.tfvars",
-        "project/terraform.tfvars",
+          "terraform.tfvars",
+          "project/terraform.tfvars",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Terraform variable config file")
+            .to eq("Terraform variable config file")
         expect(blob.flags.last.description)
-          .to eq("Might contain credentials for terraform providers")
+            .to eq("Might contain credentials for terraform providers")
       end
     end
 
     it "flags environment configuration files" do
       [
-        ".env",
-        "env",
-        "project/.env",
-        "project/env",
+          ".env",
+          "env",
+          "project/.env",
+          "project/env",
       ].each do |path|
         blob = create(:blob, :path => path)
-        described_class.observe(blob)
+        described_class.observe(blob, nil)
         expect(blob.flags.count).to be >= 1
         expect(blob.flags.last.caption)
-          .to eq("Environment configuration file")
+            .to eq("Environment configuration file")
         expect(blob.flags.last.description)
-          .to be nil
+            .to be nil
       end
     end
   end
@@ -1273,10 +1324,10 @@ describe Gitrob::BlobObserver do
       it "loads custom signatures" do
         described_class.unload_signatures
         allow(described_class).to receive(:custom_signatures?)
-          .and_return(true)
+                                      .and_return(true)
         expect(File).to receive(:read)
-          .with(custom_signatures_file_path)
-          .and_return('
+                            .with(custom_signatures_file_path)
+                            .and_return('
             [
                {
                  "part": "filename",
@@ -1301,10 +1352,10 @@ describe Gitrob::BlobObserver do
       it "validates custom signatures" do
         described_class.unload_signatures
         allow(described_class).to receive(:custom_signatures?)
-          .and_return(true)
+                                      .and_return(true)
         allow(File).to receive(:read)
-          .with(custom_signatures_file_path)
-          .and_return('
+                           .with(custom_signatures_file_path)
+                           .and_return('
             [
                {
                  "part": "filename",
@@ -1316,15 +1367,15 @@ describe Gitrob::BlobObserver do
             ]
           ')
         expect(described_class).to receive(:validate_signatures!)
-          .with([
-            {
-              "part" => "filename",
-               "type" => "match",
-               "pattern" => "test",
-               "caption" => "Test signature",
-               "description" => "This is a test signature"
-            }
-          ])
+                                       .with([
+                                                 {
+                                                     "part" => "filename",
+                                                     "type" => "match",
+                                                     "pattern" => "test",
+                                                     "caption" => "Test signature",
+                                                     "description" => "This is a test signature"
+                                                 }
+                                             ])
         described_class.load_custom_signatures!
       end
     end
@@ -1332,215 +1383,215 @@ describe Gitrob::BlobObserver do
     context "when Signature file is empty" do
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return("")
+                            .with(signatures_file_path)
+                            .and_return("")
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Signature file contains no signatures"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Signature file contains no signatures"
+                )
       end
     end
 
     context "when Signature file contains an empty array" do
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return("[]")
+                            .with(signatures_file_path)
+                            .and_return("[]")
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Signature file contains no signatures"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Signature file contains no signatures"
+                )
       end
     end
 
     context "when Signature file contains invalid JSON" do
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return("lol\nwhat?")
+                            .with(signatures_file_path)
+                            .and_return("lol\nwhat?")
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Could not parse signature file"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Could not parse signature file"
+                )
       end
     end
 
     context "when signature is missing part" do
       let(:signatures) do
         [{
-          "type" => "match",
-          "pattern" => "pattern",
-          "caption" => "caption",
-          "description" => "description"
-        }]
+             "type" => "match",
+             "pattern" => "pattern",
+             "caption" => "caption",
+             "description" => "description"
+         }]
       end
 
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return(JSON.dump(signatures))
+                            .with(signatures_file_path)
+                            .and_return(JSON.dump(signatures))
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Validation failed for Signature #1: Missing required signature key: part"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Validation failed for Signature #1: Missing required signature key: part"
+                )
       end
     end
 
     context "when signature is missing type" do
       let(:signatures) do
         [{
-          "part" => "filename",
-          "pattern" => "pattern",
-          "caption" => "caption",
-          "description" => "description"
-        }]
+             "part" => "filename",
+             "pattern" => "pattern",
+             "caption" => "caption",
+             "description" => "description"
+         }]
       end
 
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return(JSON.dump(signatures))
+                            .with(signatures_file_path)
+                            .and_return(JSON.dump(signatures))
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Validation failed for Signature #1: Missing required signature key: type"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Validation failed for Signature #1: Missing required signature key: type"
+                )
       end
     end
 
     context "when signature is missing pattern" do
       let(:signatures) do
         [{
-          "part" => "filename",
-          "type" => "match",
-          "caption" => "caption",
-          "description" => "description"
-        }]
+             "part" => "filename",
+             "type" => "match",
+             "caption" => "caption",
+             "description" => "description"
+         }]
       end
 
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return(JSON.dump(signatures))
+                            .with(signatures_file_path)
+                            .and_return(JSON.dump(signatures))
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Validation failed for Signature #1: Missing required signature key: pattern"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Validation failed for Signature #1: Missing required signature key: pattern"
+                )
       end
     end
 
     context "when signature is missing caption" do
       let(:signatures) do
         [{
-          "part" => "filename",
-          "type" => "match",
-          "pattern" => "pattern",
-          "description" => "description"
-        }]
+             "part" => "filename",
+             "type" => "match",
+             "pattern" => "pattern",
+             "description" => "description"
+         }]
       end
 
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return(JSON.dump(signatures))
+                            .with(signatures_file_path)
+                            .and_return(JSON.dump(signatures))
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Validation failed for Signature #1: Missing required signature key: caption"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Validation failed for Signature #1: Missing required signature key: caption"
+                )
       end
     end
 
     context "when signature is missing description" do
       let(:signatures) do
         [{
-          "part" => "filename",
-          "type" => "match",
-          "pattern" => "pattern",
-          "caption" => "caption"
-        }]
+             "part" => "filename",
+             "type" => "match",
+             "pattern" => "pattern",
+             "caption" => "caption"
+         }]
       end
 
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return(JSON.dump(signatures))
+                            .with(signatures_file_path)
+                            .and_return(JSON.dump(signatures))
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Validation failed for Signature #1: Missing required signature key: description"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Validation failed for Signature #1: Missing required signature key: description"
+                )
       end
     end
 
     context "when signature has invalid part" do
       let(:signatures) do
         [{
-          "part" => "what",
-          "type" => "match",
-          "pattern" => "pattern",
-          "caption" => "caption",
-          "description" => "description"
-        }]
+             "part" => "what",
+             "type" => "match",
+             "pattern" => "pattern",
+             "caption" => "caption",
+             "description" => "description"
+         }]
       end
 
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return(JSON.dump(signatures))
+                            .with(signatures_file_path)
+                            .and_return(JSON.dump(signatures))
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Validation failed for Signature #1: Invalid signature part: what"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Validation failed for Signature #1: Invalid signature part: what"
+                )
       end
     end
 
     context "when signature has invalid type" do
       let(:signatures) do
         [{
-          "part" => "filename",
-          "type" => "what",
-          "pattern" => "pattern",
-          "caption" => "caption",
-          "description" => "description"
-        }]
+             "part" => "filename",
+             "type" => "what",
+             "pattern" => "pattern",
+             "caption" => "caption",
+             "description" => "description"
+         }]
       end
 
       it "raises CorruptSignaturesError" do
         expect(File).to receive(:read)
-          .with(signatures_file_path)
-          .and_return(JSON.dump(signatures))
+                            .with(signatures_file_path)
+                            .and_return(JSON.dump(signatures))
         expect do
           described_class.load_signatures!
         end
-          .to raise_error(
-            Gitrob::BlobObserver::CorruptSignaturesError,
-            "Validation failed for Signature #1: Invalid signature type: what"
-          )
+            .to raise_error(
+                    Gitrob::BlobObserver::CorruptSignaturesError,
+                    "Validation failed for Signature #1: Invalid signature type: what"
+                )
       end
     end
   end

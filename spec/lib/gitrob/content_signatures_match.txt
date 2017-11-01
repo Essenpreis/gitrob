@@ -1,0 +1,8 @@
+	$config['dbpassword'] = "dbpassword"; 
+	"password" = "my_pw"
+	password" = "my_pw"
+	password="my_pw" //should be foundPlease generate random password for each landscape
+	password==='wow' //hard coded pw check
+        password=="wow" //hard coded pw check
+        <creds password="lj"/> //xml - note: XML not fully supported
+        //This is my password="lala" in a comment

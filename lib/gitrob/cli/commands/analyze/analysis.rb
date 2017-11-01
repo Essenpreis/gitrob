@@ -26,9 +26,11 @@ module Gitrob
               db_blob = @db_assessment.save_blob(blob, db_repo, db_owner)
 
               #TODO: check signatures if there's a deep inspection signature - download blob only then
-              #info("Loaded #{Gitrob::BlobObserver.signatures.count} signatures")
+              #TODO + make sure blob was correctly downloaded, otherwise throw an error
+
+              info("Loaded #{Gitrob::BlobObserver.signatures.count} signatures")
               blob_string = download_blob(blob)
-              Gitrob::BlobObserver.deep_observe(db_blob, blob_string)
+              Gitrob::BlobObserver.observe(db_blob, blob_string)
               #Gitrob::BlobObserver.observe(db_blob)
 
               if db_blob.flags.count > 0

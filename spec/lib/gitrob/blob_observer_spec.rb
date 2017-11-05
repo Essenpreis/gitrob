@@ -4,6 +4,7 @@ describe Gitrob::BlobObserver do
 
   describe ".observe" do
 
+<<<<<<< HEAD
     #http://rubular.com/r/g9VJcjs6Yw
     it "flags certain password strings after equal sign" do
       File.foreach(File.dirname(__FILE__) + '/content_signatures_match.txt') do |s|
@@ -32,6 +33,37 @@ describe Gitrob::BlobObserver do
 
     #TODO one test for non pw signatures to check if signature generation was successful in generating signatures for keywords like key[s] etc.
     # http://rubular.com/r/78DttBgldB
+=======
+    it "flags certain password strings after equal sign" do
+
+      File.foreach(File.dirname(__FILE__) + '/content_signatures_match.txt') do |s|
+        path = "JavaClass.java"
+        blob = create(:blob, :path => path)
+        described_class.observe(blob, s)
+
+        expect(blob.flags.count).to be >= 1
+        expect(blob.flags.first.caption)
+            .to eq('Contains passw[a-z0]*d after equal sign')
+        expect(blob.flags.first.description)
+            .to eq(nil)
+      end
+
+    end
+
+    it "does NOT flag certain password strings after equal sign" do
+      File.foreach(File.dirname(__FILE__) + '/content_signatures_no_match.txt') do |s|
+        path = "JavaClass.java"
+        blob = create(:blob, :path => path)
+        described_class.observe(blob, s)
+
+        expect(blob.flags.count).to be >= 0
+      end
+
+    end
+
+
+    #TODO one test for non pw signatures to check if signature generation was successful in generating signatures for keywords like key[s] etc.
+>>>>>>> refs/remotes/origin/master
 
 
     it "flags private RSA SSH keys" do

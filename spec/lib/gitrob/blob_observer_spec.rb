@@ -4,7 +4,7 @@ describe Gitrob::BlobObserver do
 
   describe ".observe" do
 
-    #http://rubular.com/r/g9VJcjs6Yw
+    #http://rubular.com/r/dgQDZIoCSj
     it "flags certain password strings after equal sign" do
       File.foreach(File.dirname(__FILE__) + '/content_signatures_match.txt') do |s|
         path = "JavaClass.java"
@@ -12,10 +12,8 @@ describe Gitrob::BlobObserver do
         described_class.observe(blob, s)
 
         expect(blob.flags.count).to be >= 1
-        expect(blob.flags.first.caption)
-            .to eq('Contains passw[a-z0] after equal sign')
-        expect(blob.flags.first.description)
-            .to eq(nil)
+        expect(blob.flags.first.caption).to eq('Contains passw[a-z0] after equal sign')
+        expect(blob.flags.first.description).to eq(nil)
       end
     end
 

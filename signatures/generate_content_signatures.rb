@@ -1,6 +1,10 @@
 class GenerateContentSignatures
 
+<<<<<<< HEAD
   keywords = ["passw[a-z0]", "pass", "pw", "passkey", "secret", "cred[s]?", "credential[s]?", "pem", "p12", "key[s]?"]
+=======
+  keywords = ["passw[a-z0]*d", "pass", "pw", "passkey", "secret", "cred[s]?", "credential[s]?", "pem", "p12", "key[s]?"]
+>>>>>>> refs/remotes/origin/master
 
   #"" Creds after = in '' or ""
   keywords.each do |word|

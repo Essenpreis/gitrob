@@ -1,6 +1,6 @@
 class GenerateContentSignatures
 
-  keywords = ["passw[a-z0]", "pass", "pw", "passkey", "secret", "cred[s]?", "credential[s]?", "pem", "p12", "key[s]?"]
+  keywords = ["passw[a-z0]*", "pass", "pw", "passkey", "secret", "cred[s]?", "credential[s]?", "pem", "p12", "key[s]?"]
 
   #"" Creds after = in '' or ""
   keywords.each do |word|
@@ -21,6 +21,7 @@ class GenerateContentSignatures
 
 
   #"" Creds after : in json like files
+  # test in http://rubular.com/r/2bSdKueG1j
   keywords.each do |word|
     puts "{"
     puts "\"part\": \"content\","
@@ -28,9 +29,9 @@ class GenerateContentSignatures
     puts "\"extension_pattern\": \"json|yaml|yml|conf|config\","
 
     if word.include? "key"
-      puts  '"pattern": "^.*'+word+'\\\s*[:]\\\s*\\\S{240,}$",'
+      puts  '"pattern": "^.*'+word+'\\\s*[:]{1}\\\s*\\\S{240,}$",'
     else
-      puts  '"pattern": "^.*'+word+'\\\s*[:]\\\s*.+$",'
+      puts  '"pattern": "^.*'+word+'\\\s*[:]{1}\\\s*.+$",'
     end
 
     puts "\"caption\" : \"Contains #{word} after colon\","
